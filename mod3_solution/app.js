@@ -15,7 +15,7 @@
         myTitle: '@title',
         foundList: '<',
         //badRemove: '=',
-        //onRemove: '&'
+        onRemove: '&'
       },
       controller: FoundItemsDirectiveController,
       controllerAs: 'list',
@@ -43,21 +43,33 @@
   }
 
 
-  NarrowItDownController.$inject = ['MenuSearchService'];
-  function NarrowItDownController(MenuSearchService)
+  NarrowItDownController.$inject = ['MenuSearchService','$scope'];
+  function NarrowItDownController(MenuSearchService,$scope)
   {
     var ctrl = this;
+    $scope.userSearchTerm = "";
 
-    ctrl.searchMenu = function (searchTerm) {
-      var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
+    ctrl.searchMenu = function () {
+      if($scope.userSearchTerm == "")
+      {
+        ctrl.found = [];
+      }
+      else {
+        var promise = MenuSearchService.getMatchedMenuItems($scope.userSearchTerm);
 
-      promise.then(function (response) {
-        ctrl.found = response;
-      })
-      .catch(function (error) {
-        console.log("Something went wrong. Please try again later!");
-      });
+        promise.then(function (response) {
+          ctrl.found = response;
+        })
+        .catch(function (error) {
+          console.log("Something went wrong. Please try again later!");
+        });
+      }
     };
+
+    ctrl.removeItem = function (index) {
+        ctrl.found.splice(index, 1);
+    };
+
   }
 
 
@@ -83,7 +95,7 @@
             if (desc.toLowerCase().indexOf(searchTermLower) > -1 ) {
               var item = {
                 name: items[i].name,
-                shortName: items[i].shortName,
+                shortName: items[i].short_name,
                 description: desc
               };
 
