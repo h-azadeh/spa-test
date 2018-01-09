@@ -53,7 +53,7 @@ function MenuDataService($http, ApiBasePath) {
               description: items[i].description
             };
 
-            categoryList.push(item);
+            itemsList.push(item);
         }
 
         return itemsList;

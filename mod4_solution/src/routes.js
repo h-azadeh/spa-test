@@ -30,8 +30,24 @@ function RoutesConfig($stateProvider, $urlRouterProvider, $qProvider) {
         return MenuDataService.getAllCategories();
       }]
     }
-  });
+  })
 
+  // Item detail
+  .state('itemDetail', {
+    url: '/item-detail/{shortName}',
+    templateUrl: 'src/templates/menuItems.template.html',
+    controller: 'ItemDetailController as itemDetail',
+    params: {
+      shortName: null
+    },
+    resolve: {
+      categoryItems: ['$stateParams', 'MenuDataService',
+      function ($stateParams, MenuDataService) {
+        //return MenuDataService.getItemsForCategory({categoryShortName:$stateParams.shortName});
+        return MenuDataService.getItemsForCategory($stateParams.shortName);
+      }]
+    }
+  });
 
 }
 
